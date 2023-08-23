@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="css/QNA.css" />
+        <link rel="stylesheet" href="js/QNA.js">
+        <title>무엇이든 문의하세요</title>
+    </head>
+    <body>
+        <section class="popup">
+            <h2 class="title">문의 사항</h2>
+            <p class="subtitle">
+                궁금하신 사항을 문의해주시면 친절하게 답해드리겠습니다.
+            </p>
+            <p class="subtitle2">* 필수 입력</p>
+            <section>
+                <ul>
+                    <li>
+                        기업명
+                        <input
+                            type="text"
+                            id="companyInput"
+                            placeholder="기업명을 작성해주세요"
+                        />
+                    </li>
+                    <li>
+                        이메일 주소 <span style="color: red">*</span>
+                        <input
+                            type="text"
+                            id="emailInput"
+                            placeholder="받으실 이메일의 주소를 입력해주세요"
+                        />
+                    </li>
+                    <li>
+                        이름/직책 <span style="color: red">*</span>
+                        <input
+                            type="text"
+                            id="nameInput"
+                            placeholder="본인의 이름과 직책을 작성해주세요"
+                        />
+                    </li>
+                    <li>
+                        연락처 <span style="color: red">*</span>
+                        <input
+                            type="text"
+                            id="contactInput"
+                            placeholder="연락받을 연락처를 입력해주세요"
+                        />
+                    </li>
+                    <li class="error" id="errorDisplay"></li>
+                </ul>
+                <textarea
+                    name="contact"
+                    id="contact"
+                    cols="30"
+                    rows="10"
+                    placeholder="문의내용을 입력해주세요."
+                ></textarea>
+                <br />
+                <p class="error" id="errorDisplay"></p>
+                <section class="agree">
+                    <input
+                        type="checkbox"
+                        id="agreeCheckbox"
+                        name="agreeCheckbox"
+                        required
+                    />
+                    <span>개인정보 수집 및 이용에 동의합니다.</span>
+                    <button id="privacy" type="button">
+                        [개인정보취급방침 보기]
+                    </button>
+                    <button id="submitButton" type="submit" disabled>전 송</button>
+                </section>
+            </section>
+            </section>
+                <article id="popupOverlay" class="privacy-overlay">
+                    <div class="popup-content">
+                        <h2>개인정보 수집 및 이용에 대한 법률</h2>
+                        <br>
+                        <section>
+                            <p class="main-law">
+                                이용자는 귀사에 개인정보를 제출함에 따라
+                                개인정보 보호법 제15조 및 제17조에 따라 아래의
+                                내용으로 개인정보를 수집, 이용 및 제공하는데
+                                동의합니다.
+                            </p>
+                            <hr />
+                            <p>
+                                <div class="law-num">1. 개인정보의 수집 및 이용에 관한 사항</div>
+                                수집하는 개인정보항목 : 성명, 전화번호, 이메일,
+                                아이피 등과 그 외 기재 내용일체
+                            </p><br>
+                            <p>
+                                <div class="law-num">2. 개인정보의 이용 목적</div>
+                                수집된 개인정보는 '문의사항 관련 일체 사항' 목적
+                                외의 용도로는 사용하지 않습니다.
+                            </p><br>
+                            <p>
+                                <div class="law-num">3. 개인정보의 보관 및 이용 기간</div>
+                                이용자의 개인정보를 다음과 같이 보관하며, 수집,
+                                이용 및 제공 목적이 달성된 경우 [개인정보
+                                보호법] 제 21조에 따라 처리합니다. (이용자가
+                                홈페이지를 유지하는 기간 동안 개인정보를
+                                보관하며 홈페이지를 삭제할 경우 즉시 파기됨)
+                            </p>
+                        </section><br>
+                        <section>
+                            <p class="law-num">저작권 관련 법률 사항</p>
+                            <p>
+                                “이용자”가 서비스 내에 게시한 게시물의 저작권은
+                                해당 게시물의 저작자에게 귀속되며 “이용자"의
+                                게시물이 "정보통신망법" 및 "저작권법"등 관련법에
+                                위반되는 내용을 포함하는 경우, 모든책임은
+                                “이용자“에게있습니다.
+                            </p>
+                        </section><br>
+                        <button id="close-popup">닫기</button>
+                    </div>
+                </article>
+        
+        <script>
+            window.onload = function () {
+                const emailInput = document.getElementById("emailInput");
+                const nameInput = document.getElementById("nameInput");
+                const contactInput = document.getElementById("contactInput");
+                const submitButton = document.getElementById("submitButton");
+                const errorDisplay = document.getElementById("errorDisplay");
+                const agreeCheckbox = document.getElementById("agreeCheckbox");
+                const companyInput = document.getElementById("companyInput");
+                const contactTextarea = document.getElementById("contact");
+
+                function validateEmail(email) {
+                    const emailPattern =
+                        /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+                    return emailPattern.test(email);
+                }
+
+                function validateContact(contact) {
+                    const contactPattern = /^010\d{4}\d{4}$/;
+                    return contactPattern.test(contact);
+                }
+
+                function updateSubmitButton() {
+                    const email = emailInput.value.trim();
+                    const contact = contactInput.value.trim();
+                    const name = nameInput.value.trim();
+
+                    const isValidEmail = validateEmail(email);
+                    const isValidContact = validateContact(contact);
+                    const isCheckedAgree = agreeCheckbox.checked;
+
+                    if (
+                        isValidEmail &&
+                        isValidContact &&
+                        name !== "" &&
+                        isCheckedAgree
+                    ) {
+                        submitButton.disabled = false;
+                        errorDisplay.textContent = "";
+                    } else {
+                        submitButton.disabled = true;
+                        errorDisplay.textContent = "필수 정보를 확인해주세요.";
+                    }
+                }
+
+                emailInput.addEventListener("input", updateSubmitButton);
+                contactInput.addEventListener("input", updateSubmitButton);
+                nameInput.addEventListener("input", updateSubmitButton);
+                agreeCheckbox.addEventListener("change", updateSubmitButton);
+
+                // 텔레그램 봇의 토큰과 chat ID
+                const botToken =
+                    "6489571347:AAEe233QwKO1qNt_2ZAjzCk7zIfZx01kQMk";
+                const chatId = "6551064114";
+
+                // 전송 버튼 클릭 이벤트 처리
+                submitButton.addEventListener("click", () => {
+                    const company = companyInput.value;
+                    const email = emailInput.value;
+                    const name = nameInput.value;
+                    const contact = contactInput.value;
+                    const inquiry = contactTextarea.value;
+
+                    // 전송할 메시지 내용 구성
+                    const message = `
+                    문의 사항이 도착했습니다:
+                    기업명: ${company}
+                    이메일: ${email}
+                    이름/직책: ${name}
+                    연락처: ${contact}
+                    문의내용: ${inquiry}
+                `;
+
+                    // 텔레그램으로 메시지 전송
+                    const telegramApiUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
+                    const formData = new FormData();
+                    formData.append("chat_id", chatId);
+                    formData.append("text", message);
+
+                    fetch(telegramApiUrl, {
+                        method: "POST",
+                        body: formData,
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            if (data.ok) {
+                                console.log("메시지 전송 성공");
+                                alert("메시지가 전송되었습니다. 감사합니다!");
+                            
+                //                 const popup = document.querySelector(".popup");
+                // popup.style.display = "none";
+                            } else {
+                                console.error("메시지 전송 실패:", data);
+                                alert(
+                                    "메시지 전송에 실패하였습니다. 다시 시도해주세요."
+                                );
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("메시지 전송 중 오류 발생:", error);
+                            alert(
+                                "메시지 전송 중 오류가 발생하였습니다. 다시 시도해주세요."
+                            );
+                        });
+                });
+            };
+        </script>
+        <script>
+            const privacyButton = document.getElementById("privacy");
+            const popupOverlay = document.getElementById("popupOverlay");
+            const closeButton = document.getElementById("close-popup");
+
+            privacyButton.addEventListener("click", () => {
+                popupOverlay.style.display = "flex";
+            });
+
+            closeButton.addEventListener("click", () => {
+                popupOverlay.style.display = "none";
+            });
+        </script>
+        <!-- <script src="js/Push.js"></script> -->
+    </body>
+</html>
