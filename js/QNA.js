@@ -9,10 +9,10 @@ backTap.addEventListener("click", function (event) {
     openPopup.classList.remove("on");
 });
 window.addEventListener("popstate", function (event) {
-    // 뒤로가기 버튼을 눌렀을 때 팝업만 닫기
-    if (popup.style.display === "block") {
-        popup.style.display = "none";
-        event.preventDefault(); // 기본 브라우저 뒤로가기 동작 취소
+    if (openPopup.classList.contains("on")) {
+        openPopup.classList.remove("on");
+        // 이벤트를 중지하여 기본 뒤로 가기 동작을 방지합니다.
+        event.preventDefault();
     }
 });
 
