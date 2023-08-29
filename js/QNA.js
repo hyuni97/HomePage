@@ -1,26 +1,23 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const openPopupButton = document.getElementById("openPopupButton");
-    const closePopupButton = document.getElementById("closePopupButton");
-    const popup = document.getElementById("popup");
+const openPopupButton = document.querySelector("#openPopupButton");
+const backTap = document.querySelector(".backTap");
+const openPopup = document.querySelector("#popup");
 
-    openPopupButton.addEventListener("click", (event) => {
-        event.stopPropagation();
-        popup.style.display = "block";
+openPopupButton.addEventListener("click", function (event) {
+    openPopup.classList.add("on");
+});
+backTap.addEventListener("click", function (event) {
+    openPopup.classList.remove("on");
+});
 
-        document.addEventListener("click", outsideClickHandler);
-    });
+// 개인정보 관련
+const privacyButton = document.getElementById("privacy");
+const popupOverlay = document.getElementById("popupOverlay");
+const backButton = document.getElementById("close-popup");
 
-    closePopupButton.addEventListener("click", () => {
-        popup.style.display = "none";
-        document.removeEventListener("click", outsideClickHandler);
-    });
+privacyButton.addEventListener("click", () => {
+    popupOverlay.style.display = "flex";
+});
 
-    popup.style.display = "none";
-
-    function outsideClickHandler(event) {
-        if (!popup.contains(event.target) && event.target !== openPopupButton) {
-            popup.style.display = "none";
-            document.removeEventListener("click", outsideClickHandler);
-        }
-    }
+backButton.addEventListener("click", () => {
+    popupOverlay.style.display = "none";
 });

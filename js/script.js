@@ -34,6 +34,7 @@ document.querySelectorAll("li").forEach((li, index) => {
 const searchBar = document.getElementById("searchBar");
 const micIcon = document.getElementById("micIcon");
 const voiceNotification = document.getElementById("voiceNotification");
+
 const recognition = new webkitSpeechRecognition();
 
 recognition.continuous = false;
@@ -41,12 +42,17 @@ recognition.interimResults = true;
 
 recognition.onstart = () => {
   console.log("음성 인식 시작");
-  showVoiceNotification("음성 인식 중...");
+  voiceNotification.style.display = "block"; // 표시를 활성화
 };
 
 recognition.onerror = (event) => {
   console.error("음성 인식 오류:", event.error);
-  showVoiceNotification("음성 인식 오류 발생");
+  voiceNotification.style.display = "none"; // 표시를 비활성화
+};
+
+recognition.onend = () => {
+  console.log("음성 인식 종료");
+  voiceNotification.style.display = "none"; // 음성 인식 종료 시 표시를 비활성화
 };
 
 recognition.onresult = (event) => {
@@ -81,20 +87,6 @@ searchBar.addEventListener("keyup", (event) => {
   }
 });
 
-// 검색 아이콘 클릭 이벤트 처리
-document.getElementById("searchIcon").addEventListener("click", performSearch);
-
-// 음성 인식 중 알림 표시 함수
-const showVoiceNotification = (message) => {
-  voiceNotification.textContent = message;
-  voiceNotification.style.display = "block";
-
-  setTimeout(() => {
-    voiceNotification.style.display = "none";
-  }, 3000); // 3초 후에 알림 숨김
-};
-
-
 function navigateTo(page) {
   // 페이지 전환 로직 구현
   if (page === "메인") {
@@ -102,6 +94,8 @@ function navigateTo(page) {
     window.location.href = "index.html";
   } else if (page === "체험하기") {
     window.location.href = "https://m.worknsales.com";
-  } 
-
+  } else if (page === "홍보페이지") {
+    window.location.href = "https://m.worknsales.com";
+  }
 }
+
